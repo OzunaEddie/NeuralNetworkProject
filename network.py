@@ -82,17 +82,14 @@ class NeuralNetwork:
         print(answer, '\n', 'Accuracy', (self.correct/self.total)*100, '%')
 
     # Generates the random data set for H and L Mixed
-    def generateDataSet(self, t, opt):
+    def generateDataSet(self, t):
         a = 0
         up = False
         middle = False
-        if opt == 'training':
-            f = open("training.txt", "w+")
-        elif opt == "testing":
-            f = open("testing.txt", "w+")
-            self.total = t
-            self.correct = t
         k = 0
+        f = open('data.txt', "w+")
+        self.correct = t - 100
+        self.total = t - 100
         for j in range(t):
             if j % 6 == 0:
                 k = 0
@@ -135,20 +132,19 @@ class NeuralNetwork:
 
 # Declare Instace with a 4X3 Matrices
 network = NeuralNetwork(3, 4)
-# Generating the training daa set for H and L
-network.generateDataSet(10, 'training')
-# Generates the testing data set for H and L
-network.generateDataSet(10, 'testing')
-# Training Phase
-with open('training.txt') as data:
-    for line in data:
+# Generating the training and testing data set for H and L
+network.generateDataSet(10)
+# Testing And Training Phase
+with open('data.txt') as data:
+    # Training Phase
+    head = [next(data) for x in range(10)]
+    for line in head:
         sequence = [None] * (len(line) - 1)
         for i in range(len(line)-2):
             sequence[i] = int(line[i])
         sequence[12] = line[12]
         network.train(sequence)
-# Testing Phase
-with open('testing.txt') as data:
+    # Testing Phase
     for line in data:
         sequence = [None] * (len(line) - 1)
         for i in range(len(line)-2):

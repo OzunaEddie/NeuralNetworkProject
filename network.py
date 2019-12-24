@@ -95,7 +95,7 @@ class NeuralNetwork:
                 k = 0
             training_set = ["1", "0", "0", "1", "0",
                             "0", "1", "0", "0", "1", "1", "1"]
-            for x in range(4):
+            for x in range(3):
                 rad = random.randint(0,11)
                 if training_set[rad] == "0":#here
                     training_set[rad] = "1"#here
@@ -116,7 +116,7 @@ class NeuralNetwork:
                 middle = False
             training_set = ["1", "0", "1", "1", "1",
                             "1", "1", "1", "1", "1", "0", "1"]
-            for x in range(4):
+            for x in range(3):
                 rad = random.randint(0,11)
                 if training_set[rad] == "0":#here
                     training_set[rad] = "1"#here

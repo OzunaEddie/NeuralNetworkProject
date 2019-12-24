@@ -1,4 +1,4 @@
-# Authors - Eddie Ozuna, Anthony Campana
+# Authors - Eddie Ozuna, Anthony Campana, Orion Cadri
 import random
 
 

@@ -69,36 +69,80 @@ class NeuralNetwork:
         answer[5] = True if answer[2] == answer[4] else False
         return answer
 
+    def generateL(self, t, opt):
 
-# One of the way we can generate our dataset
-f = open("training.txt", "w+")
-for j in range(5):
-    training_set = ["1", "0", "1", "1", "1", "1", "1", "1", "1", "1", "0", "1"]
-    if j <= 2:
-        index = random.choice([4, 7])
-        training_set[index] = '0'
-    elif j >= 2 and j <= 4:
-        index = random.choice([0, 2, 9, 11])
-        training_set[index] = '0'
-    f.write("".join(training_set))
-    f.write("\n")
+        if opt == 'training':
+            f = open("trainingL.txt", "w+")
+        elif opt == "testing":
+            f = open("testL.txt", "w+")
+        k = 0
+        for j in range(t):
+            if j % 6 == 0:
+                k = 0
+            training_set = ["1", "0", "0", "1", "0",
+                            "0", "1", "0", "0", "1", "1", "1"]
+            if j > 18:
+                training_set[k] = '0'
+                if k < 9:
+                    k += 3
+                elif k >= 9 and k < 12:
+                    k += 1
+            f.write("".join(training_set))
+            f.write("\n")
+        f.close()
+
+    def generateH(self, t, opt):
+        f = ''
+        if opt == 'training':
+            f = open("trainingH.txt", "w+")
+        elif opt == "testing":
+            f = open("testH.txt", "w+")
+        a = 0
+        up = False
+        middle = False
+        for j in range(t):
+            if j % 11 == 0:
+                a = 0
+                up = False
+                middle = False
+            training_set = ["1", "0", "1", "1", "1",
+                            "1", "1", "1", "1", "1", "0", "1"]
+            training_set[a] = '0'
+            if a < 9 and up != True:
+                a += 3
+            elif a >= 9 and a < 12 and up != True:
+                a += 1
+            elif a >= 2 and a <= 11 and middle != True:
+                a -= 3
+            elif middle == True:
+                a += 3
+            if a == 11:
+                up = True
+            if a == 2:
+                a = 4
+                middle = True
+            f.write("".join(training_set))
+            f.write("\n")
 
 
-h = [1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1]
-l = [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1]
 network = NeuralNetwork(3, 4)
-network.train(h, 'h')
-network.train(l, 'l')
-for i in network.random_points:
-    print(i)
-print(" ")
-for i in network.s:
-    print(i)
-print(" ")
-for i in network.t_of_h:
-    print(i)
-print(" ")
-for i in network.t_of_l:
-    print(i)
-
-print(network.belongsTo(h))
+# Generating Training and Testing Data set for image H
+network.generateH(200, 'training')
+network.generateH(100, 'testing')
+# Generating Training nd Testing Data set for image L
+network.generateL(200, 'training')
+network.generateL(100, 'testing')
+# Training Phase
+with open('trainingH.txt') as dataH, open('trainingL.txt') as dataL:
+    for line in dataH:
+        sequence = [None] * (len(line) - 1)
+        for i in range(len(line)-1):
+            sequence[i] = int(line[i])
+        network.train(sequence, 'h')
+        print(sequence)
+    for line in dataL:
+        sequence = [None] * (len(line) - 1)
+        for i in range(len(line)-1):
+            sequence[i] = int(line[i])
+        network.train(sequence, 'l')
+        print(sequence)

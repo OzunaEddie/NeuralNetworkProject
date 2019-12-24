@@ -25,7 +25,7 @@ class NeuralNetwork:
             l = k
             k += self.n
 
-    # Generates correspoding sets based on the index set generated
+    # Generates correspoding pixel based on the index set generated
     def setMatrices(self, array):
         self.s = [[0]*self.n for _ in range(self.m)]
         for i in range(len(self.random_points)):
@@ -71,11 +71,10 @@ class NeuralNetwork:
         self.class_l(array[:12])
         answer = [None, "Actual Class:", array[12],
                   "Predicted Class:", None, None]
+        answer[0] = array[:12]
         if self.l_total > self.h_total:
-            answer[0] = array
             answer[4] = "L"
         elif self.h_total > self.l_total:
-            answer[0] = array
             answer[4] = "H"
         answer[5] = True if answer[2] == answer[4] else False
         if not answer[5]:

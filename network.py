@@ -1,3 +1,5 @@
+# Authors - Eddie Ozuna
+
 import random
 
 

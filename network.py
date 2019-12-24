@@ -8,6 +8,7 @@ class NeuralNetwork:
     def __init__(self, n, m):
         self.n = n
         self.m = m
+        self.correct = 200
         self.random_points = [[0]*n for _ in range(m)]
         self.t_of_h = [[0]*8 for _ in range(m)]
         self.t_of_l = [[0]*8 for _ in range(m)]
@@ -152,9 +153,11 @@ with open('testingH.txt') as dataH, open('testingL.txt') as dataL:
         sequence = [None] * (len(line) - 1)
         for i in range(len(line)-1):
             sequence[i] = int(line[i])
-        print(network.belongsTo(sequence, "H"))
+        print(network.belongsTo(sequence, "H"), '\n', 'Accuracy',
+              (network.correct/200)*100, '%')
     for line in dataL:
         sequence = [None] * (len(line) - 1)
         for i in range(len(line)-1):
             sequence[i] = int(line[i])
-        print(network.belongsTo(sequence, "L"))
+         print(network.belongsTo(sequence, "L"), '\n', 'Accuracy',
+              (network.correct/200)*100, '%')

@@ -143,11 +143,11 @@ class NeuralNetwork:
 # Declare Instace with a 4X3 Matrices
 network = NeuralNetwork(3, 4)
 # Generating the training and testing data set for H and L
-network.generateDataSet(10)
+network.generateDataSet(300)
 # Testing And Training Phase
 with open('data.txt') as data:
     # Training Phase
-    head = [next(data) for x in range(10)]
+    head = [next(data) for x in range(400)]
     for line in head:
         sequence = [None] * (len(line) - 1)
         for i in range(len(line)-2):

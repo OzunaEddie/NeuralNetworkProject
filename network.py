@@ -56,10 +56,10 @@ class NeuralNetwork:
             index = ''.join(str(e) for e in self.s[i])
             self.h_total += self.t_of_h[i][self.binaryToDecimal(index)]
 
-    def belongsTo(self, array):
+    def belongsTo(self, array, c):
         self.class_h(array)
         self.class_l(array)
-        answer = [None, "Actual Class:", None, "Predicted Class:", None, None]
+        answer = [None, "Actual Class:", c, "Predicted Class:", None, None]
         if self.l_total > self.h_total:
             answer[0] = array
             answer[4] = "L"
@@ -74,7 +74,7 @@ class NeuralNetwork:
         if opt == 'training':
             f = open("trainingL.txt", "w+")
         elif opt == "testing":
-            f = open("testL.txt", "w+")
+            f = open("testingL.txt", "w+")
         k = 0
         for j in range(t):
             if j % 6 == 0:
@@ -96,7 +96,7 @@ class NeuralNetwork:
         if opt == 'training':
             f = open("trainingH.txt", "w+")
         elif opt == "testing":
-            f = open("testH.txt", "w+")
+            f = open("testingH.txt", "w+")
         a = 0
         up = False
         middle = False
@@ -139,10 +139,20 @@ with open('trainingH.txt') as dataH, open('trainingL.txt') as dataL:
         for i in range(len(line)-1):
             sequence[i] = int(line[i])
         network.train(sequence, 'h')
-        print(sequence)
     for line in dataL:
         sequence = [None] * (len(line) - 1)
         for i in range(len(line)-1):
             sequence[i] = int(line[i])
         network.train(sequence, 'l')
-        print(sequence)
+# Testing Phase
+with open('testingH.txt') as dataH, open('testingL.txt') as dataL:
+    for line in dataH:
+        sequence = [None] * (len(line) - 1)
+        for i in range(len(line)-1):
+            sequence[i] = int(line[i])
+        print(network.belongsTo(sequence, "H"))
+    for line in dataL:
+        sequence = [None] * (len(line) - 1)
+        for i in range(len(line)-1):
+            sequence[i] = int(line[i])
+        print(network.belongsTo(sequence, "L"))

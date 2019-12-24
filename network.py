@@ -91,15 +91,16 @@ class NeuralNetwork:
         self.correct = t - 100
         self.total = t - 100
         for j in range(t):
-            rad = random.randint(0,11)  # here
             if j % 6 == 0:
                 k = 0
             training_set = ["1", "0", "0", "1", "0",
                             "0", "1", "0", "0", "1", "1", "1"]
-            if training_set[rad] == "0":#here
-                training_set[rad] = "1"#here
-            else:                       #here
-                training_set[rad] = "1"
+            for x in range(2):
+                rad = random.randint(0,11)
+                if training_set[rad] == "0":#here
+                    training_set[rad] = "1"#here
+                else:                       #here
+                        training_set[rad] = "1"
             if j > 6:
                 training_set[k] = '0'
                 if k < 9:
@@ -109,17 +110,18 @@ class NeuralNetwork:
             f.write("".join(training_set))
             f.write('L')
             f.write("\n")
-            rad = random.randint(0,11)
             if j % 11 == 0:
                 a = 0
                 up = False
                 middle = False
             training_set = ["1", "0", "1", "1", "1",
                             "1", "1", "1", "1", "1", "0", "1"]
-            if training_set[rad] == "0":#here
-                training_set[rad] = "1"#here
-            else:                       #here
-                training_set[rad] = "0"  #here
+            for x in range(2):
+                rad = random.randint(0,11)
+                if training_set[rad] == "0":#here
+                    training_set[rad] = "1"#here
+                else:                       #here
+                    training_set[rad] = "1"
             training_set[a] = '0'
             if a < 9 and up != True:
                 a += 3

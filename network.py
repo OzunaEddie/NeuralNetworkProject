@@ -1,8 +1,4 @@
 # Authors - Eddie Ozuna, Anthony Campana
-<<<<<<< HEAD
-=======
-
->>>>>>> b6d8499f0ede02e95fb6b47d95fbe2030b1445ae
 import random
 
 

@@ -3,16 +3,18 @@ import random
 
 
 class NeuralNetwork:
-
+    # Initiliaze and Declares all needed variables and Array
     def __init__(self, n, m):
         self.n = n
         self.m = m
-        self.correct = 200
+        self.correct = 0
+        self.total = 0
         self.random_points = [[0]*n for _ in range(m)]
         self.t_of_h = [[0]*8 for _ in range(m)]
         self.t_of_l = [[0]*8 for _ in range(m)]
         self.createPoints()
 
+    # Generates Index Set randomly
     def createPoints(self):
         points = random.sample(range(12), 12)
         l = 0
@@ -23,6 +25,7 @@ class NeuralNetwork:
             l = k
             k += self.n
 
+    # Generates correspoding sets based on the index set generated
     def setMatrices(self, array):
         self.s = [[0]*self.n for _ in range(self.m)]
         for i in range(len(self.random_points)):
@@ -30,6 +33,7 @@ class NeuralNetwork:
             for j in range(len(points)):
                 self.s[i][j] = array[points[j]]
 
+    # Train the Neural Network
     def train(self, array):
         self.setMatrices(array[:12])
         if array[12].lower() == 'h':
@@ -41,9 +45,11 @@ class NeuralNetwork:
                 index = ''.join(str(e) for e in self.s[i])
                 self.t_of_l[i][self.binaryToDecimal(index)] += 1
 
+    # Utility method to help convert from binary to decimal
     def binaryToDecimal(self, n):
         return int(n, 2)
 
+    # Machine Learning Array for L
     def class_l(self, array):
         self.setMatrices(array)
         self.l_total = 0
@@ -51,6 +57,7 @@ class NeuralNetwork:
             index = ''.join(str(e) for e in self.s[i])
             self.l_total += self.t_of_l[i][self.binaryToDecimal(index)]
 
+    # Machine Learning Array for H
     def class_h(self, array):
         self.setMatrices(array)
         self.h_total = 0
@@ -58,6 +65,7 @@ class NeuralNetwork:
             index = ''.join(str(e) for e in self.s[i])
             self.h_total += self.t_of_h[i][self.binaryToDecimal(index)]
 
+    # Figure out which class the image belongs to
     def belongsTo(self, array):
         self.class_h(array[:12])
         self.class_l(array[:12])
@@ -72,8 +80,9 @@ class NeuralNetwork:
         answer[5] = True if answer[2] == answer[4] else False
         if not answer[5]:
             self.correct -= 1
-        return answer
+        print(answer, '\n', 'Accuracy', (self.correct/self.total)*100, '%')
 
+    # Generates the random data set for H and L Mixed
     def generateDataSet(self, t, opt):
         a = 0
         up = False
@@ -82,6 +91,8 @@ class NeuralNetwork:
             f = open("training.txt", "w+")
         elif opt == "testing":
             f = open("testing.txt", "w+")
+            self.total = t
+            self.correct = t
         k = 0
         for j in range(t):
             if j % 6 == 0:
@@ -123,6 +134,7 @@ class NeuralNetwork:
         f.close()
 
 
+# Declare Instace with a 4X3 Matrices
 network = NeuralNetwork(3, 4)
 # Generating the training daa set for H and L
 network.generateDataSet(10, 'training')
@@ -143,5 +155,4 @@ with open('testing.txt') as data:
         for i in range(len(line)-2):
             sequence[i] = int(line[i])
         sequence[12] = line[12]
-        print(network.belongsTo(sequence), '\n', 'Accuracy',
-              (network.correct/200)*100, '%')
+        network.belongsTo(sequence)

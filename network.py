@@ -30,13 +30,13 @@ class NeuralNetwork:
             for j in range(len(points)):
                 self.s[i][j] = array[points[j]]
 
-    def train(self, array, letter):
-        self.setMatrices(array)
-        if letter.lower() == 'h':
+    def train(self, array):
+        self.setMatrices(array[:12])
+        if array[12].lower() == 'h':
             for i in range(len(self.s)):
                 index = ''.join(str(e) for e in self.s[i])
                 self.t_of_h[i][self.binaryToDecimal(index)] += 1
-        elif letter.lower() == 'l':
+        elif array[12].lower() == 'l':
             for i in range(len(self.s)):
                 index = ''.join(str(e) for e in self.s[i])
                 self.t_of_l[i][self.binaryToDecimal(index)] += 1
@@ -58,10 +58,11 @@ class NeuralNetwork:
             index = ''.join(str(e) for e in self.s[i])
             self.h_total += self.t_of_h[i][self.binaryToDecimal(index)]
 
-    def belongsTo(self, array, c):
-        self.class_h(array)
-        self.class_l(array)
-        answer = [None, "Actual Class:", c, "Predicted Class:", None, None]
+    def belongsTo(self, array):
+        self.class_h(array[:12])
+        self.class_l(array[:12])
+        answer = [None, "Actual Class:", array[12],
+                  "Predicted Class:", None, None]
         if self.l_total > self.h_total:
             answer[0] = array
             answer[4] = "L"
@@ -73,38 +74,29 @@ class NeuralNetwork:
             self.correct -= 1
         return answer
 
-    def generateL(self, t, opt):
-
+    def generateDataSet(self, t, opt):
+        a = 0
+        up = False
+        middle = False
         if opt == 'training':
-            f = open("trainingL.txt", "w+")
+            f = open("training.txt", "w+")
         elif opt == "testing":
-            f = open("testingL.txt", "w+")
+            f = open("testing.txt", "w+")
         k = 0
         for j in range(t):
             if j % 6 == 0:
                 k = 0
             training_set = ["1", "0", "0", "1", "0",
                             "0", "1", "0", "0", "1", "1", "1"]
-            if j > 18:
+            if j > 6:
                 training_set[k] = '0'
                 if k < 9:
                     k += 3
                 elif k >= 9 and k < 12:
                     k += 1
             f.write("".join(training_set))
+            f.write('L')
             f.write("\n")
-        f.close()
-
-    def generateH(self, t, opt):
-        f = ''
-        if opt == 'training':
-            f = open("trainingH.txt", "w+")
-        elif opt == "testing":
-            f = open("testingH.txt", "w+")
-        a = 0
-        up = False
-        middle = False
-        for j in range(t):
             if j % 11 == 0:
                 a = 0
                 up = False
@@ -126,39 +118,30 @@ class NeuralNetwork:
                 a = 4
                 middle = True
             f.write("".join(training_set))
+            f.write('H')
             f.write("\n")
+        f.close()
 
 
 network = NeuralNetwork(3, 4)
-# Generating Training and Testing Data set for image H
-network.generateH(200, 'training')
-network.generateH(100, 'testing')
-# Generating Training nd Testing Data set for image L
-network.generateL(200, 'training')
-network.generateL(100, 'testing')
+# Generating the training daa set for H and L
+network.generateDataSet(10, 'training')
+# Generates the testing data set for H and L
+network.generateDataSet(10, 'testing')
 # Training Phase
-with open('trainingH.txt') as dataH, open('trainingL.txt') as dataL:
-    for line in dataH:
+with open('training.txt') as data:
+    for line in data:
         sequence = [None] * (len(line) - 1)
-        for i in range(len(line)-1):
+        for i in range(len(line)-2):
             sequence[i] = int(line[i])
-        network.train(sequence, 'h')
-    for line in dataL:
-        sequence = [None] * (len(line) - 1)
-        for i in range(len(line)-1):
-            sequence[i] = int(line[i])
-        network.train(sequence, 'l')
+        sequence[12] = line[12]
+        network.train(sequence)
 # Testing Phase
-with open('testingH.txt') as dataH, open('testingL.txt') as dataL:
-    for line in dataH:
+with open('testing.txt') as data:
+    for line in data:
         sequence = [None] * (len(line) - 1)
-        for i in range(len(line)-1):
+        for i in range(len(line)-2):
             sequence[i] = int(line[i])
-        print(network.belongsTo(sequence, "H"), '\n', 'Accuracy',
-              (network.correct/200)*100, '%')
-    for line in dataL:
-        sequence = [None] * (len(line) - 1)
-        for i in range(len(line)-1):
-            sequence[i] = int(line[i])
-        print(network.belongsTo(sequence, "L"), '\n', 'Accuracy',
+        sequence[12] = line[12]
+        print(network.belongsTo(sequence), '\n', 'Accuracy',
               (network.correct/200)*100, '%')

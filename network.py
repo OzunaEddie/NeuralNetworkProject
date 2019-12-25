@@ -80,7 +80,7 @@ class NeuralNetwork:
         answer[5] = True if answer[2] == answer[4] else False
         if not answer[5]:
             self.correct -= 1
-        if self.dn != 1:
+        if self.dn < 1:
           self.dn += .1
         self.extraCredit(array,answer,self.dn)
         print(answer, '\n', 'Accuracy', (self.correct/self.total)*100, '%')

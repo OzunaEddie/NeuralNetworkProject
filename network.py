@@ -82,11 +82,11 @@ class NeuralNetwork:
             self.correct -= 1
         if self.dn < 1:
           self.dn += .1
-        self.extraCredit(array,answer,self.dn)
+        #Line below utilizes extraCredit function. Comment out in order to use it.
+        #self.extraCredit(array,answer,self.dn)
         print(answer, '\n', 'Accuracy', (self.correct/self.total)*100, '%')
-        print(self.dn)
     
-    # Extra credits
+    # Extra credit
     def extraCredit(self,array,answer,dn):
         if answer[5]:
           d_n = dn

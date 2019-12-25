@@ -7,6 +7,7 @@ class NeuralNetwork:
     def __init__(self, n, m):
         self.n = n
         self.m = m
+        self.dn = .1
         self.correct = 0
         self.total = 0
         self.random_points = [[0]*n for _ in range(m)]
@@ -79,7 +80,27 @@ class NeuralNetwork:
         answer[5] = True if answer[2] == answer[4] else False
         if not answer[5]:
             self.correct -= 1
+        if self.dn != 1:
+          self.dn += .1
+        self.extraCredit(array,answer,self.dn)
         print(answer, '\n', 'Accuracy', (self.correct/self.total)*100, '%')
+        print(self.dn)
+    
+    # Extra credits
+    def extraCredit(self,array,answer,dn):
+        if answer[5]:
+          d_n = dn
+        else:
+          d_n = dn * -1
+        if array[12].lower() == 'h':
+            for i in range(len(self.s)):
+                index = ''.join(str(e) for e in self.s[i])
+                self.t_of_h[i][self.binaryToDecimal(index)] += d_n
+        elif array[12].lower() == 'l':
+            for i in range(len(self.s)):
+                index = ''.join(str(e) for e in self.s[i])
+                self.t_of_l[i][self.binaryToDecimal(index)] += d_n
+
 
     # Generates the random data set for H and L Mixed
     def generateDataSet(self, t):
